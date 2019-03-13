@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Data.OleDb;
+using System.Globalization;
 using TscStatement.Abstract.IService;
 using TscStatement.Abstract.Models;
 using TscStatement.EntityFramework;
@@ -26,6 +27,9 @@ namespace TscStatement.ServiceRealize
                 dataAdapter.Fill(dt);
             }
 
+            //var tmp = dt.Rows[6][1].GetType();
+            ////Type type = GetType(tmp);
+            //Console.WriteLine(dt.Rows[6][1] == DBNull.Value);
             return DataTableToList(dt);
         }
 
@@ -37,15 +41,15 @@ namespace TscStatement.ServiceRealize
             {
                 list.Add(new OrderInfo
                 {
-                    Category = dataRow["类别"].ToString(),
-                    OrderNumber = dataRow["单号"].ToString(),
-                    CustomerName = dataRow["单位名称"].ToString(),
-                    Summary = dataRow["摘要"].ToString(),
-                    OrderDateTime = Convert.ToDateTime(dataRow["日期"].ToString()),
-                    PreviousBalance = Convert.ToDouble(dataRow["结存金额"]),
-                    IssuedAmount = Convert.ToDouble(dataRow["发出金额"]),
-                    PaymentAmount = Convert.ToDouble(dataRow["减少金额"]),
-                    CurrentBalance = Convert.ToDouble(dataRow["结存金额"]),
+                    Category = dataRow["Category"].ToString(),
+                    OrderNumber = dataRow["OrderNumber"].ToString(),
+                    CustomerName = dataRow["CustomerName"].ToString(),
+                    Summary = dataRow["Summary"].ToString(),
+                    OrderDateTime = dataRow["OrderDateTime"] == DBNull.Value ? (DateTime?)null : DateTime.Parse(dataRow["OrderDateTime"].ToString()),
+                    PreviousBalance = dataRow["PreviousBalance"] == DBNull.Value ? (double?)null : Convert.ToDouble(dataRow["PreviousBalance"]),
+                    IssuedAmount = dataRow["IssuedAmount"] == DBNull.Value ? (double?)null : Convert.ToDouble(dataRow["IssuedAmount"]),
+                    PaymentAmount = dataRow["PaymentAmount"] == DBNull.Value ? (double?)null : Convert.ToDouble(dataRow["PaymentAmount"]),
+                    CurrentBalance = dataRow["CurrentBalance"] == DBNull.Value ? (double?)null : Convert.ToDouble(dataRow["CurrentBalance"]),
                 });
             }
 
